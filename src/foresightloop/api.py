@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-"""Public checkpoint API for the validated ForesightLoop reference graph."""
+"""Public checkpoint API for the validated InfuseLoop reference graph."""
 from dataclasses import asdict
 from pathlib import Path
 import json
@@ -7,7 +7,7 @@ import torch
 from .model import Model,Config
 
 
-class ForesightLoop(Model):
+class InfuseLoop(Model):
     """Shared-backbone causal language model with previous-cycle aggregation.
 
     This is the readable PyTorch reference, not the FA4/Triton benchmark engine.
@@ -35,9 +35,9 @@ class ForesightLoop(Model):
                         local_files_only=local_files_only,token=token))
         config=json.loads(get('config.json').read_text())
         if config.get('checkpoint_format')!='foresightloop-safetensors-v1':
-            raise ValueError('Expected an exported ForesightLoop checkpoint, not a standard Qwen checkpoint')
+            raise ValueError('Expected an exported InfuseLoop checkpoint, not a standard Qwen checkpoint')
         if config.get('cross_loop_source','previous_token')!='previous_token' or config.get('source_trajectory_offset') is not None:
-            raise ValueError('This public API loads previous-cycle ForesightLoop checkpoints')
+            raise ValueError('This public API loads previous-cycle InfuseLoop checkpoints')
         with torch.device('meta'):
             model=cls(config['backbone_config'],config['num_loops'],config.get('residual_lambda',.5),config.get('source_rmsnorm',True))
         model.load_state_dict(load_file(str(get('model.safetensors')),device='cpu'),strict=True,assign=True)
@@ -50,7 +50,7 @@ class ForesightLoop(Model):
         from safetensors.torch import save_file
         out=Path(directory);out.mkdir(parents=True,exist_ok=True)
         config=dict(getattr(self,'release_config',{}))
-        config.update(model_type='foresightloop',architectures=['ForesightLoop'],
+        config.update(model_type='infuseloop',architectures=['InfuseLoop'],
             checkpoint_format='foresightloop-safetensors-v1',backbone_config=asdict(self.c),
             num_loops=self.H,residual_lambda=self.lam,cross_loop_aggregation='attnres',
             source_rmsnorm=self.source_rmsnorm,cross_loop_source='previous_token',source_trajectory_offset=None)
@@ -85,3 +85,7 @@ class ForesightLoop(Model):
                 output=self.decode(next_token,cache=cache,valid=~finished)
                 cache=output.cache;logits=output.logits[:,-1]
         return result
+
+
+# The serialized format and legacy import remain compatible with earlier releases.
+ForesightLoop = InfuseLoop

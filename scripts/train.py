@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel
-from foresightloop import ForesightLoop,Config
+from infuseloop import InfuseLoop,Config
 p=argparse.ArgumentParser()
 p.add_argument('--tokens',required=True)
 p.add_argument('--loops',type=int,choices=[4,8],default=4)
@@ -25,7 +25,7 @@ assert a.global_batch_size%(world*a.micro_batch_size)==0
 accum=a.global_batch_size//(world*a.micro_batch_size)
 torch.manual_seed(20261017)
 config=Config(**json.loads(Path(a.config).read_text())) if a.config else Config()
-m=ForesightLoop(config,a.loops).to(device);m.checkpoint_layers=True
+m=InfuseLoop(config,a.loops).to(device);m.checkpoint_layers=True
 train=DistributedDataParallel(m,device_ids=[local] if a.device=='cuda' else None) if world>1 else m
 optimizer=torch.optim.AdamW(m.parameters(),lr=3e-4,betas=(.9,.95),weight_decay=.1)
 raw=np.memmap(a.tokens,dtype='<u4',mode='r')

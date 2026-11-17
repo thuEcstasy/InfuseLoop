@@ -3,13 +3,17 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "foresightloop"
-version = "0.1.0"
-description = "Reference implementation and released checkpoints for ForesightLoop"
+name = "infuseloop"
+version = "0.1.1"
+description = "InfuseLoop: Cross-Trajectory Latent Injection for Scalable Parallel Looped Transformers"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
 dependencies = ["torch>=2.6", "safetensors>=0.4.5", "huggingface-hub>=0.30", "transformers>=4.51"]
+
+[project.urls]
+Repository = "https://github.com/thuEcstasy/InfuseLoop"
+Models = "https://huggingface.co/thuEcstasy1/InfuseLoop-8"
 
 [project.optional-dependencies]
 test = ["pytest>=8"]
