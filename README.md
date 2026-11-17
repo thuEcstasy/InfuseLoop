@@ -6,7 +6,7 @@
 
 Go deeper. Stay fast.
 
-[![Project page](https://img.shields.io/badge/Project-demo-b92f79?style=flat-square)](https://infuseloop-demo.regal-vole-5301.chatgpt.site)
+[![Project page](https://img.shields.io/badge/Project-demo-b92f79?style=flat-square)](https://thuecstasy.github.io/InfuseLoop/)
 [![Hugging Face](https://img.shields.io/badge/🤗_Models-InfuseLoop--4_%26_8-ffd21e?style=flat-square)](https://huggingface.co/collections/thuEcstasy1/infuseloop-6af0ae0ca484a3099351831f)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-1282b4?style=flat-square)](LICENSE)
 
